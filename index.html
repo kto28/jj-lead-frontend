@@ -66,23 +66,26 @@ form.addEventListener("submit", async (e) => {
     phone: formData.get("phone"),
   }
 
-  const res = await fetch("https://api.jj8829.org/lead", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  })
+const res = await fetch("https://api.jj8829.org/lead", {
+  method: "POST",
+  body: formData,
+});
 
-  const result = await res.json()
-  const msg = document.getElementById("message")
+let resultText = await res.text();
+let msg = document.getElementById("message");
+
+try {
+  const result = JSON.parse(resultText);
   if (res.ok) {
-    msg.innerText = `✅ 成功寄出邀請連結，Token：${result.token}`
-    form.reset()
+    msg.innerText = `✅ 成功寄出邀請連結，Token：${result.token}`;
   } else {
-    msg.innerText = `❌ 發送失敗：${result.error}`
-    msg.style.color = "red"
+    msg.innerText = `❌ 發送失敗：${result.error || resultText}`;
+    msg.style.color = "red";
   }
+} catch (e) {
+  msg.innerText = `❌ 發送失敗：無法解析伺服器回應\n${resultText}`;
+  msg.style.color = "red";
+}
 })
 
   </script>
