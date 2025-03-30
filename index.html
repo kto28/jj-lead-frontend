@@ -56,23 +56,35 @@
     <div class="message" id="message"></div>
   </div>
   <script>
-    const form = document.getElementById("leadForm")
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault()
-      const formData = new FormData(form)
-      const res = await fetch("https://api.jj8829.org/lead", {
-        method: "POST",
-        body: formData,
-      })
-      const result = await res.json()
-      const msg = document.getElementById("message")
-      if (res.ok) {
-        msg.innerText = `✅ 成功寄出邀請連結，Token：${result.token}`
-      } else {
-        msg.innerText = `❌ 發送失敗：${result.error}`
-        msg.style.color = "red"
-      }
-    })
+const form = document.getElementById("leadForm")
+form.addEventListener("submit", async (e) => {
+  e.preventDefault()
+  const formData = new FormData(form)
+  const payload = {
+    email: formData.get("email"),
+    name: formData.get("name"),
+    phone: formData.get("phone"),
+  }
+
+  const res = await fetch("https://api.jj8829.org/lead", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+
+  const result = await res.json()
+  const msg = document.getElementById("message")
+  if (res.ok) {
+    msg.innerText = `✅ 成功寄出邀請連結，Token：${result.token}`
+    form.reset()
+  } else {
+    msg.innerText = `❌ 發送失敗：${result.error}`
+    msg.style.color = "red"
+  }
+})
+
   </script>
 </body>
 </html>
