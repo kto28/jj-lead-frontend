@@ -60,7 +60,7 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault()
       const formData = new FormData(form)
-      const res = await fetch("http://45.63.120.180:8000/lead", {
+      const res = await fetch("https://api.jj8829.org/lead", {
         method: "POST",
         body: formData,
       })
